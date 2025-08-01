@@ -2,8 +2,9 @@ import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 # Load your fine-tuned model
-model_path = "deepseek_lawyer"  # Or "checkpoint-xxx" if that's your best checkpoint
-tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-1.3b-instruct", trust_remote_code=True)
+model_path = "deepseek-ai/deepseek-coder-1.3b-instruct"  # ✅ From Hugging Face hub
+
+tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
 
 # Chat function
