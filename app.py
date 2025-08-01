@@ -1,22 +1,21 @@
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-# Use base model
 model_path = "deepseek-ai/deepseek-coder-1.3b-instruct"
+
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
 
-# Generate chatbot reply
 def generate_response(user_input):
     prompt = f"### Instruction:\n{user_input}\n\n### Response:\n"
-    inputs = tokenizer(prompt, return_tensors="pt")  # ✅ FIXED: removed .to(model.device)
+    inputs = tokenizer(prompt, return_tensors="pt")
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=256,
+        max_new_tokens=200,
         do_sample=True,
         temperature=0.7,
-        pad_token_id=tokenizer.eos_token_id,
+        pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
         eos_token_id=tokenizer.eos_token_id
     )
 
@@ -24,13 +23,13 @@ def generate_response(user_input):
     return output_text.replace(prompt, "").strip()
 
 # Streamlit UI
-st.set_page_config(page_title="📜 Legal Chatbot Assistant", layout="centered")
-st.title("🧑‍⚖️ Law Chatbot")
-st.markdown("Ask me anything about FIRs, criminal law, or general legal procedure.")
+st.set_page_config(page_title="📜 Law Chatbot", layout="centered")
+st.title("🧑‍⚖️ Legal Assistant")
+st.markdown("Ask me any legal question related to FIRs, criminal law, or general legal procedure.")
 
-user_input = st.text_input("📝 Enter your legal question here:")
+question = st.text_input("📝 Type your legal question below:")
 
-if user_input:
-    with st.spinner("Analyzing your question..."):
-        answer = generate_response(user_input)
+if question:
+    with st.spinner("Analyzing..."):
+        answer = generate_response(question)
         st.success("🤖 " + answer)
