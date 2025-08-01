@@ -1,8 +1,8 @@
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-# Load your fine-tuned model
-model_path = "deepseek-ai/deepseek-coder-1.3b-instruct"  # ✅ From Hugging Face hub
+# ✅ Base model from Hugging Face
+model_path = "deepseek-ai/deepseek-coder-1.3b-instruct"
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
@@ -35,3 +35,4 @@ if user_query:
     with st.spinner("Thinking like a lawyer..."):
         answer = generate_response(user_query)
     st.success("🤖 " + answer)
+
