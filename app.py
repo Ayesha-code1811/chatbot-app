@@ -10,7 +10,7 @@ model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
 # Chat function
 def generate_response(user_input):
     prompt = f"### Instruction:\n{user_input}\n\n### Response:\n"
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    inputs = tokenizer(prompt, return_tensors="pt")  # ✅ Fixed: removed .to(model.device)
 
     outputs = model.generate(
         **inputs,
@@ -35,4 +35,3 @@ if user_query:
     with st.spinner("Thinking like a lawyer..."):
         answer = generate_response(user_query)
     st.success("🤖 " + answer)
-
